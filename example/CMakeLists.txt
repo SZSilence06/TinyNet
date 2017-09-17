@@ -4,3 +4,6 @@ LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/lib)
 
 ADD_EXECUTABLE(HelloWorld HelloWorld.cpp)
 TARGET_LINK_LIBRARIES(HelloWorld TinyNet)
+
+ADD_EXECUTABLE(SimpleClient SimpleClient.cpp)
+TARGET_LINK_LIBRARIES(SimpleClient TinyNet)

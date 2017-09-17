@@ -44,6 +44,7 @@ namespace TinyNet
     {
     public:
         Sock4Addr() = default;
+        Sock4Addr(const sockaddr_in& addr) : addr_(addr) {}
         Sock4Addr(const Ip4Addr& addr, uint16_t port);
 
         Ip4Addr getIp() const { return Ip4Addr(addr_.sin_addr); }

@@ -60,10 +60,16 @@ namespace  TinyNet
         }
         TcpSocket4* socket = TcpSocket4::create(fd);
         socket->setEvents(POLLIN | POLLOUT);
-        TcpConnection* connection = TcpConnection::create(socket);
-        connections_.push_back(std::shared_ptr<TcpConnection>(connection));
-        event_dispatcher_->getPoller()->addSocket(socket);
 
+        TcpConnection* connection = TcpConnection::create(socket);
+        socket->setOnRead([connection](){ connection->handleRead(); });
+        if(event_dispatcher_->getPoller()->addSocket(socket) == false)
+        {
+            TN_ERROR("Failed to add socket to poller!");
+            delete connection;
+        }
+
+        connections_.push_back(std::shared_ptr<TcpConnection>(connection));
         TN_INFO("New connection established.");
     }
 }

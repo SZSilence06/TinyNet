@@ -6,11 +6,10 @@
 #include <functional>
 #include <poll.h>
 #include <Event.h>
+#include <Addr.h>
 
 namespace TinyNet
 {
-    class Sock4Addr;
-
     TN_API class Socket : public NonClonable
     {
     public:
@@ -21,8 +20,8 @@ namespace TinyNet
         virtual ~Socket();
 
         bool listen();
-        void handleRead() { onRead_(); }
-        void handleWrite() { onWrite_(); }
+        bool checkConnection();
+        bool setNonBlock(bool nonBlock);
 
         void setMaxQueueSize(int value) { max_queue_size_ = value; }
 
@@ -37,6 +36,9 @@ namespace TinyNet
         void setOnRead(Callback onRead) { onRead_ = onRead; }
         void setOnWrite(Callback onWrite) { onWrite_ = onWrite;}
 
+        void handleRead() { onRead_(); }
+        void handleWrite() { onWrite_(); }
+
     protected:
         int fd_ = -1;
         int max_queue_size_ = 20;
@@ -50,6 +52,8 @@ namespace TinyNet
     public:
         virtual std::string getIp() const override;
         virtual uint16_t getPort() const override;
+        Sock4Addr getAddr() const;
+        Sock4Addr getPeerAddr() const;
     };
 
     TN_API class TcpSocket4 : public Socket4
@@ -57,6 +61,8 @@ namespace TinyNet
     public:
         static TcpSocket4* create(const Sock4Addr& addr);
         static TcpSocket4* create(int fd);
+
+        bool connect(const Sock4Addr& addr);
 
     private:
         TcpSocket4() = default;

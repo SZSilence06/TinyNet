@@ -7,5 +7,6 @@
 #include "Addr.h"
 #include "Poller.h"
 #include "Socket.h"
+#include "TcpClient.h"
 
 #endif
