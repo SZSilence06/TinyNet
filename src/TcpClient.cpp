@@ -50,14 +50,24 @@ namespace TinyNet
 
     bool TcpClient::connect(const Sock4Addr &server)
     {
-        bool result = socket_->connect(server);
-        if(result == false)
-            return false;
         if(isNonBlock_)
         {
             socket_->setOnRead([this]() { handleRead(); });
             socket_->setOnWrite([this](){ handleConnected(); });
             event_dispatcher_->getPoller()->addSocket(socket_.get());
+        }
+        bool result = socket_->connect(server);
+        if(isNonBlock_ && result == true)
+        {
+            //connected immediately
+            handleConnected();
+            return true;
+        }
+        if(result == false)
+        {
+            if(isNonBlock_ && errno == EINPROGRESS)
+                return true;
+            return false;
         }
         return result;
     }

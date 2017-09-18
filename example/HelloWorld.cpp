@@ -6,7 +6,7 @@ using namespace TinyNet;
 int main()
 {
     EventDispatcher dispatcher;
-    auto server = TcpServer4::create(&dispatcher, "192.168.153.128", 3000);
+    auto server = TcpServer4::create(&dispatcher, "", 3000);
     server->setOnRead([](TcpConnection* connection){
         std::cout<< "Received data." << std::endl;
     });

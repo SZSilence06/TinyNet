@@ -43,6 +43,7 @@ namespace TinyNet
         int fd_ = -1;
         int max_queue_size_ = 20;
         uint32_t events_;
+        bool isNonBlock_ = false;
         Callback onRead_ = [](){};
         Callback onWrite_ = [](){};
     };
